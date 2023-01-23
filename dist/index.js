@@ -40,6 +40,17 @@ app.post("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Retorna la informacion
     res.json(result);
 }));
+// crear Playlist
+app.post("/playlist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, useremail } = req.body;
+    const result = yield prisma.playlist.create({
+        data: {
+            name: name,
+            user: { connect: { email: useremail } },
+        },
+    });
+    res.json(result);
+}));
 // la funcion flecha es anonima
 app.listen(port, () => {
     console.log(`Aplicación de ejemplo en el puerto ${port}`);

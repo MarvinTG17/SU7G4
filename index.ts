@@ -48,6 +48,19 @@ app.post("/user", async (req: Request,res: Response) => {
 
 
 
+// crear Playlist
+app.post("/playlist", async (req: Request,res: Response) => {
+
+    const { name, useremail  } = req.body;
+    const result = await prisma.playlist.create({
+        data: {
+          name: name,
+          user: {connect: {email :useremail }},
+        },
+    });
+    res.json(result)    
+});
+
 
 
 
