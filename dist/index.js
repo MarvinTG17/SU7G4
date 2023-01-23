@@ -51,6 +51,37 @@ app.post("/playlist", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     });
     res.json(result);
 }));
+// crear canciones
+app.post("/songs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, artist, album, year, genre, duration, nameplaylist } = req.body;
+    const result = yield prisma.song.create({
+        data: {
+            name: name,
+            artist: artist,
+            album: album,
+            year: year,
+            genre: genre,
+            duration: duration,
+            playlist: { connect: { name: nameplaylist } },
+        },
+    });
+    res.json(result);
+}));
+exports.create_song = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, artist, album, year, genre, duration, namePlaylist } = req.body;
+    const result = yield prisma.song.create({
+        data: {
+            name: name,
+            artist: artist,
+            album: album,
+            year: year,
+            genre: genre,
+            duration: duration,
+            playlist: { connect: { name: namePlaylist } },
+        },
+    });
+    return res.json(result);
+});
 // la funcion flecha es anonima
 app.listen(port, () => {
     console.log(`Aplicación de ejemplo en el puerto ${port}`);

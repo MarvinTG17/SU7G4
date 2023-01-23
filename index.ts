@@ -62,6 +62,56 @@ app.post("/playlist", async (req: Request,res: Response) => {
 });
 
 
+// crear canciones
+app.post("/songs", async (req: Request,res: Response) => {
+    const {name, artist, album, year, genre, duration, nameplaylist } = req.body;
+    const result = await prisma.song.create({
+        data: {
+          name: name,
+          artist:artist,
+          album:album,
+          year:year,
+          genre:genre,
+          duration:duration,
+          playlist: {connect: {name :nameplaylist}},
+        },
+    });
+    res.json(result)         
+    
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+exports.create_song = async(req:Request,res:Response)=>{
+    const { name, artist,album,year,genre,duration,namePlaylist } = req.body;
+    const result = await prisma.song.create({
+        data: {
+          name: name,
+          artist:artist,
+          album:album,
+          year:year,
+          genre:genre,
+          duration:duration,
+          playlist: {connect: {name :namePlaylist}},
+        },
+    });
+    return res.json(result);      
+};
+
+
+
+
+
 
 
 
