@@ -9,8 +9,8 @@ Integrantes:
 
 
 Primero debemos crear el archivo .env
-DATABASE_URL="file:./dev.db"
-PORT=5000
+- DATABASE_URL="file:./dev.db"
+- PORT=5000
 
 
 Como Usar:
