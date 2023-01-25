@@ -26,22 +26,26 @@ app.get('/', (req, res) => {
     res.send('HOLA!!');
 });
 // crear Usuarios
-app.post("/user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, email, password, date_born } = req.body;
+app.post("/createUser", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { name, email, password, dateborn } = req.body;
     const passwordHash = yield bcryptjs_1.default.hash(password, 10);
     const result = yield prisma.usuarios.create({
         data: {
             name: name,
             email: email,
             password: passwordHash,
-            date_born: date_born,
+            date_born: dateborn
         },
     });
     // Retorna la informacion
     res.json(result);
 }));
+app.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield prisma.usuarios.findMany();
+    return res.json(user);
+}));
 // crear Playlist
-app.post("/playlist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/createPlaylist", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, useremail } = req.body;
     const result = yield prisma.playlist.create({
         data: {
@@ -52,7 +56,7 @@ app.post("/playlist", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.json(result);
 }));
 // crear canciones
-app.post("/songs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/createSong", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, artist, album, year, genre, duration, nameplaylist } = req.body;
     const result = yield prisma.song.create({
         data: {
@@ -67,22 +71,56 @@ app.post("/songs", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
     res.json(result);
 }));
-exports.create_song = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { name, artist, album, year, genre, duration, namePlaylist } = req.body;
-    const result = yield prisma.song.create({
-        data: {
-            name: name,
-            artist: artist,
-            album: album,
-            year: year,
-            genre: genre,
-            duration: duration,
-            playlist: { connect: { name: namePlaylist } },
+// listar playlist
+app.get("/playlists", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const songs = yield prisma.playlist.findMany({ select: {
+            id: true,
+            name: true,
+            userId: true,
+            songs: true
+        } });
+    return res.json(songs);
+}));
+//listar canciones
+app.get("/songs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const songs = yield prisma.song.findMany();
+    return res.json(songs);
+}));
+// buscar cancion por id
+app.post('/songs/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const songs = yield prisma.song.findUnique({
+        where: {
+            id: Number(id)
         },
+        select: {
+            id: true,
+            name: true,
+            artist: true,
+            album: true
+        }
     });
-    return res.json(result);
-});
+    res.json(songs);
+}));
+//Crear Login
+app.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    const user = yield prisma.usuarios.findUnique({
+        where: {
+            email: email,
+        }
+    });
+    if (user) {
+        const validatePassword = yield bcryptjs_1.default.compare(password, user === null || user === void 0 ? void 0 : user.password);
+        //console.log(validatePassword)
+        validatePassword ? res.json("Usuario logueado") : res.json("Contraseña incorrecta");
+    }
+    else {
+        res.json("El email no existe");
+    }
+}));
 // la funcion flecha es anonima
 app.listen(port, () => {
     console.log(`Aplicación de ejemplo en el puerto ${port}`);
+    console.log(`http://localhost:${port}`);
 });
