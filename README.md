@@ -13,13 +13,13 @@ DATABASE_URL="file:./dev.db"
 PORT=5000
 
 
--Como Usar:
+Como Usar:
 
-npm install
+-npm install
 
-npx prisma migrate dev --name init
+-npx prisma migrate dev --name init
 
-npm run dev
+-npm run dev
 
 
 
