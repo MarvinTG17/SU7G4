@@ -15,11 +15,11 @@ PORT=5000
 
 Como Usar:
 
--npm install
+- npm install
 
--npx prisma migrate dev --name init
+- npx prisma migrate dev --name init
 
--npm run dev
+- npm run dev
 
 
 
